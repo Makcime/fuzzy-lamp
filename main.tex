@@ -1,0 +1,41 @@
+\documentclass[12pt,a4paper]{report}
+\usepackage{graphicx}
+\usepackage{ifpdf}
+\ifpdf
+   % put here packages only for the PDF:
+   \DeclareGraphicsExtensions{.pdf,.png,.jpg,.mps}
+   \usepackage{hyperref} 
+\else
+   % put here packages only for the DVI:
+\fi
+
+% put all the other packages here:
+\usepackage{sty}
+
+\begin{document}
+
+
+
+\input{./tex/title.tex}
+%\maketitle
+\tableofcontents
+\listoffigures
+\listoftables
+
+\subfile{tex/intro}
+\subfile{tex/ch1}
+\subfile{tex/ch2}
+
+% \input{./tex/intro.tex}
+% \input{./tex/main_part.tex}
+% \input{./tex/conclusions.tex}
+
+\appendix
+\input{./tex/appendix.tex}
+
+
+% Bibliography:
+\clearpage
+\addcontentsline{toc}{chapter}{Bibliography}
+\subfile{./tex/bibl.tex}
+\end{document}
