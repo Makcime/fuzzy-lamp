@@ -27,30 +27,51 @@ headsepline, % Uncomment to get a line under the header
 % put all the other packages here:
 \usepackage{sty}
 
-\input{./tex/infos.tex}
+\input{./cov/infos.tex}
 
 \begin{document}
 
-\input{./tex/title.tex}
-%\maketitle
+\frontmatter % Use roman page numbering style (i, ii, iii, iv...) for the pre-content pages
+
+\pagestyle{plain} % Default to the plain heading style until the thesis style is called for the body content
+
+\input{./cov/title.tex}
+
+\input{./cov/abstract.tex}
+
+% \input{./cov/declaration.tex}
+\cleardoublepage
+
+% \input{./cov/quotation.tex}
+% \input{./cov/acknowledgements.tex}
+
 \tableofcontents
+
 \listoffigures
 \listoftables
 
-\subfile{tex/intro}
-\subfile{tex/ch1}
-\subfile{tex/ch2}
+%----------------------------------------------------------------------------------------
+%	THESIS CONTENT - CHAPTERS
+%----------------------------------------------------------------------------------------
 
-% \input{./tex/intro.tex}
-% \input{./tex/main_part.tex}
-% \input{./tex/conclusions.tex}
+\mainmatter % Begin numeric (1,2,3...) page numbering
+
+\pagestyle{thesis} % Return the page headers back to the "thesis" style
+
+\subfile{chap/intro}
+\subfile{chap/sota}
+\subfile{chap/methodology}
+\subfile{chap/dvlp}
+\subfile{chap/eval}
+\subfile{chap/conclusions}
+% \subfile{chap/ch2}
 
 \appendix
-\input{./tex/appendix.tex}
+\input{./app/appendix.tex}
 
 
 % Bibliography:
 \clearpage
 \addcontentsline{toc}{chapter}{Bibliography}
-\subfile{./tex/bibl.tex}
+\subfile{./cov/bibl.tex}
 \end{document}
