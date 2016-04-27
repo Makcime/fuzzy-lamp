@@ -7,14 +7,16 @@
 \section{Database description} % (fold)
 \label{sec:database_description}
 
-% \begin{figure}[h]
-% \centering
-% \includegraphics{img/db/problems}
-% % \includesvg{img/db/problems}
-% \decoRule
-% \caption[An Electron]{An electron (artist's impression).}
-% \label{fig:Electron}
-% \end{figure}
+The figure \ref{fig:erd} (page \pageref{fig:erd}), is a part of the \emph{Entiry Relationship Diagram} representing the interessing part of the database.
+
+\begin{figure}[h]
+\centering
+\fcolorbox{black}{white}{\includegraphics[width=0.9\textheight, height=\textwidth, angle=90]{img/db/erd_att}}
+% \includesvg{img/db/problems}
+\decoRule
+\caption[Entiry Relationship Diagram]{Entiry Relationship Diagram}
+\label{fig:erd}
+\end{figure}
 
 Here is the list of the table in the database:
 
@@ -101,12 +103,12 @@ A single problem could be proposed in various languages but the language variati
 \end{wrapfigure}
 
 That explains those two tables discribing the problems. The first one colled \emph{abstractproblems} contains the technical informations for submission management. The second one, \emph{problems}, is the description of a problem, according to a specific language (\emph{language\_id}) and refering to a \emph{abstractproblems}.
-
-There is different types of problems :
+-nm
+There is different types of problems, distinguishable by their \emph{problem\_nm} patern:
 \begin{itemize}
 	\setlength\itemsep{0em}
 	\item \emph{Pxxxxx}\\
-	Those type of problems will be our baseline for the analysis. In fact, they are the \emph{offical} problems initialy present in the database, created by the designers. We can consider them as \emph{right} and \emph{relevant} in term of submission and veredict\footnote{The concept of veredict will be explain in the following section \emph{submissions table}}.
+	Those type of problems will be our baseline for the analysis. In fact, they are the \emph{offical} problems initialy present in the database, created by the designers. We can consider them as \emph{right} and \emph{relevant} in term of submission and verdict\footnote{The concept of verdict will be explain in the following section \emph{submissions table}}.
 
 	\item \emph{Xxxxxx}\\
 	The letter \emph{X} means \emph{externe}. Those problems have been created by users (\emph{instructors}) and havn't been validatd by anyone. Moreover, only a portion of users can acces to it (Those who suscribed to the courses related to the same instructor)
@@ -129,6 +131,8 @@ There is different types of problems :
 	\item 85 deprecated abstractproblems (including 21 Pxxxx type). 
 \end{itemize}
 
+\paragraph{Languages distribution:}~\\ % (fold)
+
 \newpage
 \subsection{submissions} % (fold)
 \label{sub:submissions}
@@ -144,22 +148,25 @@ There is different types of problems :
 \end{wrapfigure}
 
 \paragraph{Description:}~\\ % (fold)
-Every instance in this table represents the submission of a solution for a specific problem (\emph{problem\_id}) by a specific user (\emph{user\_id}) at a given time/moment (\emph{time\_in (time\_out)}). Form that submission (after a internal process) will stand out a veredict meaningful of the submission correctness.
+
+Every instance in this table represents the submission of a solution for a specific problem (\emph{problem\_id}) by a specific user (\emph{user\_id}) at a given time/moment (\emph{time\_in (time\_out)}). From that submission (after a internal process) will stand out a \emph{verdict} meaningful of the submission correctness.
+
+This table is one of the most important for our analysis. Indeed, this on contains the usage history of the Jutge.
 
 \paragraph{Numbers:}%~\\ % (fold)
 \begin{itemize}
-	\item 
-	\item 
+	\setlength\itemsep{0em}
+	\item 1605270 submissions in total.
+	\item 43.62\% of accepted submissions (cf. \emph{Verdict distribution})
 	\item 
 \end{itemize}
 
 
-\paragraph{Veredict distribution :} % (fold)
-
+\paragraph{Verdict distribution :}%~\\% (fold)
 \begin{center}
 \begin{tabular}{lcr}
 \toprule
- Acronym &               Veredict &     \% \\
+ Acronym &                Verdict &     \% \\
 \midrule
       AC &               Accepted &   43.62 \\
       WA &           Wrong Answer &   30.06 \\
@@ -177,15 +184,26 @@ Every instance in this table represents the submission of a solution for a speci
 \end{tabular}
 \end{center}
 
-\begin{figure}[h]
+As shown on the following table and on the figure \ref{fig:veredict_distrib}, 95\% of the submissions are distributed among those 4 verdict :
+\begin{itemize}
+	\setlength\itemsep{0em}
+	\item Accepted (43.62\%).
+	\item Wrong Answer (30.06\%).
+	\item Execution Error (11.41\%).
+	\item Compilation Error (10.70\%).
+\end{itemize}
+
+So for our first analysis, we will group the non-accepted instances and consider a boolean structure with only accepted or rejected submissions.
+
+\begin{figure}[h!]
 \centering
 \fcolorbox{black}{white}{\includegraphics[width=\textwidth]{img/db/veredict_distrib}}
 % \decoRule
-\caption[Veredict distribution]{Frequency distribustion of veredict accros every relevant submissions}
+\caption[Verdict distribution]{Frequency distribustion of verdict accros every relevant submissions}
 \label{fig:veredict_distrib}
 \end{figure}
 
-% subsubsection veredict_distribution (end)
+% subsubsection verdict_distribution (end)
 
 % \lipsum[2-3]
 
@@ -194,28 +212,28 @@ Every instance in this table represents the submission of a solution for a speci
 % subsection problems (end)
 
 
-\subsection{courseslists} % (fold)
-\label{sub:courseslists}
+\subsection{Courses organisation} % (fold)
+\label{sub:courses_organisation}
 
-\begin{wrapfigure}{l}{0.27\textwidth}
-  \vspace{-20pt}
-  \begin{center}
-    \fcolorbox{black}{black}{\includegraphics[width=0.25\textwidth]{img/db/courseslists}}
-  \end{center}
-  \vspace{-20pt}
-  % \caption{A gull}
-  % \vspace{-10pt}
-\end{wrapfigure}
+As shown on the figure \ref{fig:courses_orga}, there is several levels under the idea of courses.
+To summarize, a course invloves a list of users subsribed to it. Than a course is devided into sections, and those sections are basically lists of problems.
 
-\lipsum[2-3]
+All of thisi is implemented with 5 tables in the database (All described hereinafter).
 
-% subsection courseslists (end)
+\begin{figure}[h!]
+\centering
+\fcolorbox{black}{white}{\includegraphics[width=0.5\textwidth]{img/db/courses_orga}}
+% \decoRule
+\caption[Courses organisation]{Courses organisation - Subscribed users, Lists of problems, problems }
+\label{fig:courses_orga}
+\end{figure}
+
+% subsection courses_organisation (end)
+
 
 \newpage
 \subsection{courses} % (fold)
-\label{sub:courses}
-
-\begin{wrapfigure}{l}{0.38\textwidth}
+\begin{wrapfigure}{r}{0.38\textwidth}
   \vspace{-20pt}
   \begin{center}
     \fcolorbox{black}{black}{\includegraphics[width=0.36\textwidth]{img/db/courses}}
@@ -225,48 +243,43 @@ Every instance in this table represents the submission of a solution for a speci
   % \vspace{-10pt}
 \end{wrapfigure}
 
-\lipsum[2-3]
+\paragraph{Description}~\\ % (fold)
+General description of a course, linked to creator user and containing , inter alia, its title, description and annotation.
 
-% subsection courses (end)
+\paragraph{Numbers} % (fold)
+\begin{itemize}
+	\setlength\itemsep{0em}
+	\item 112 courses in total.
+	\item 18 of them are public.
+\end{itemize}
+% \lipsum[2-3]
+
+% paragraph courses (end)
 
 \subsection{coursesusers} % (fold)
-\label{sub:coursesusers}
-
-\begin{wrapfigure}{l}{0.27\textwidth}
+\begin{wrapfigure}{r}{0.27\textwidth}
   \vspace{-20pt}
   \begin{center}
-    \fcolorbox{black}{black}{\includegraphics[width=0.25\textwidth]{img/db/coursesusers}}
+    \fcolorbox{black}{black}{\includegraphics[width=0.26\textwidth]{img/db/coursesusers}}
   \end{center}
   \vspace{-20pt}
   % \caption{A gull}
   % \vspace{-10pt}
 \end{wrapfigure}
 
-\lipsum[2-3]
+\paragraph{Description}~\\ % (fold)
+Join table for the many-to-many relation between users and courses, matching a \emph{users\_id} with a \emph{course\_id}. It further includes an attribute for users known as tutor for the concerned course.
 
-% subsection coursesusers (end)
 
-\subsection{listitems} % (fold)
-\label{sub:listitems}
+% \lipsum[2-3]
+% \paragraph{coursesusers}~\\ % (fold)
 
-\begin{wrapfigure}{l}{0.3\textwidth}
-  \vspace{-20pt}
-  \begin{center}
-    \fcolorbox{black}{black}{\includegraphics[width=0.28\textwidth]{img/db/listitems}}
-  \end{center}
-  \vspace{-20pt}
-  % \caption{A gull}
-  % \vspace{-10pt}
-\end{wrapfigure}
-
-\lipsum[2-3]
-
-% subsection listitems (end)
+% paragraph coursesusers (end)
 
 \subsection{lists} % (fold)
 \label{sub:lists}
 
-\begin{wrapfigure}{l}{0.38\textwidth}
+\begin{wrapfigure}{r}{0.38\textwidth}
   \vspace{-20pt}
   \begin{center}
     \fcolorbox{black}{black}{\includegraphics[width=0.36\textwidth]{img/db/lists}}
@@ -276,9 +289,57 @@ Every instance in this table represents the submission of a solution for a speci
   % \vspace{-10pt}
 \end{wrapfigure}
 
+\paragraph{Description}~\\ % (fold)
+General description of a list of problems, linked to creator user and containing , inter alia, its title, description and annotation.
+Conceptually, a list is very closed to a course. The conceptual difference appears in a many-to-many relation between those tables. The idea is to include lists inside courses.
+
+\paragraph{Numbers} % (fold)
+\begin{itemize}
+	\setlength\itemsep{0em}
+	\item 607 lists in total.
+	\item 157 of them are public.
+\end{itemize}
+% \lipsum[2-3]
+
+% paragraph lists (end)
+
+
+\subsection{courseslists} % (fold)
+\begin{wrapfigure}{r}{0.27\textwidth}
+  \vspace{-20pt}
+  \begin{center}
+    \fcolorbox{black}{black}{\includegraphics[width=0.26\textwidth]{img/db/courseslists}}
+  \end{center}
+  \vspace{-20pt}
+  % \caption{A gull}
+  % \vspace{-10pt}
+\end{wrapfigure}
+
+\paragraph{Description}~\\ % (fold)
+Join table for the many-to-many relation between courses and lists of problems, matching a \emph{list\_id} with a \emph{course\_id}. It further includes an attribute indicating the position of that list inside the concerned course. 
+% \lipsum[2-3]
+
+% paragraph courseslists (end)
+
+
+
+\subsection{listitems} % (fold)
+\label{sub:listitems}
+
+\begin{wrapfigure}{r}{0.3\textwidth}
+  \vspace{-20pt}
+  \begin{center}
+    \fcolorbox{black}{black}{\includegraphics[width=0.28\textwidth]{img/db/listitems}}
+  \end{center}
+  \vspace{-20pt}
+  % \caption{A gull}
+  % \vspace{-10pt}
+\end{wrapfigure}
+
+\paragraph{Description}~\\ % (fold)
 \lipsum[2-3]
 
-% subsection lists (end)
+% paragraph listitems (end)
 
 
 \subsection{problemstags} % (fold)
@@ -298,6 +359,20 @@ Every instance in this table represents the submission of a solution for a speci
 
 % subsection problemstags (end)
 
+\subsection{compilers} % (fold)
+\label{sub:compilers}
+
+\begin{wrapfigure}{l}{0.3\textwidth}
+  \vspace{-20pt}
+  \begin{center}
+    \fcolorbox{black}{black}{\includegraphics[width=0.28\textwidth]{img/db/compilers}}
+  \end{center}
+  \vspace{-20pt}
+  % \caption{A gull}
+  % \vspace{-10pt}
+\end{wrapfigure}
+\lipsum[2-3]
+% subsection compilers (end)
 
 % section database_description (end)
 % chapter methodology (end)
