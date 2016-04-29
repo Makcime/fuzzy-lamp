@@ -1,0 +1,383 @@
+\section{Database description} % (fold)
+\label{sec:database_description}
+
+The figure \ref{fig:erd} (page \pageref{fig:erd}), is a part of the \emph{Entiry Relationship Diagram} representing the interessing part of the database.
+
+\begin{figure}[h!]
+\centering
+\fcolorbox{black}{white}{\includegraphics[width=0.9\textheight, height=\textwidth, angle=90]{img/db/erd_att_1}}
+% \includesvg{img/db/problems}
+\decoRule
+\caption[Entiry Relationship Diagram]{Entiry Relationship Diagram}
+\label{fig:erd}
+\end{figure}
+
+Here is the list of the table in the database:
+
+% \begin{itemize}
+% 	\item abstractproblems
+% 	\item compilers
+% 	\item courses
+% 	\item courseslists
+% 	\item coursesusers
+% 	\item listitems
+% 	\item lists
+% 	\item problems
+% 	\item problemstags
+% 	\item submissions
+% 	\item users
+% \end{itemize}
+
+\subsection{users} % (fold)
+\label{sub:users}
+
+\fboxsep=0mm%padding thickness
+\fboxrule=2pt%border thickness
+
+\begin{wrapfigure}{l}{0.33\textwidth}
+  \vspace{-20pt}
+  \begin{center}
+    \fcolorbox{black}{black}{\includegraphics[width=0.31\textwidth]{img/db/users}}
+  \end{center}
+  \vspace{-20pt}
+  % \caption{A gull}
+  % \vspace{-10pt}
+\end{wrapfigure}
+
+\paragraph{Description:}~\\ % (fold)
+The first table contains the users. For this analysis, the user table has been anonymized. We only refer to a user ID, and his contributions in the data base. Personal data from users will not be used for analysis. Only the creation date is kept for a time based analysis.  
+
+However, it's needed to exclude some \emph{non-representative} users :
+
+\begin{itemize}
+	\setlength\itemsep{0em}
+	\item Some users used for developement ([list])
+	\item Users with a id patern different that \emph{Uxxxxx} (Users used for competition for exemple)
+	\item Demonstrations users ($demo == 1 $).
+	\item Instructors, administrators and unregistred users (cf flags atributes in the database).
+\end{itemize}
+
+\paragraph{Numbers:}~\\ % (fold)
+In term of numbers, the database contains:
+\begin{itemize}
+	\setlength\itemsep{0em}
+	\item 10565 users in total.
+	\item 55 unregistred users.
+	\item 50 instructors.
+	\item 7 administrators.
+	\item 1 demo user.
+\end{itemize}
+
+% subsection users (end)
+
+\newpage
+\subsection{problems and abstractproblems} % (fold)
+\label{sub:problems}
+\begin{wrapfigure}{l}{0.45\textwidth}
+  \vspace{-20pt}
+  \begin{center}
+    \fcolorbox{black}{black}{\includegraphics[width=0.42\textwidth]{img/db/problems}}
+  \end{center}
+  \vspace{-10pt}
+  % \caption{A gull}
+  % \vspace{-10pt}
+\end{wrapfigure}
+
+\paragraph{Description:}~\\ % (fold)
+A single problem could be proposed in various languages but the language variation doesn't affect the technical details of a same problem. That means that the way how a submission would be processed is never linked to the language\footnote{There are actually few problems which differ between languages for inputs or outputs regarding to the language but those are negligible}.
+
+\begin{wrapfigure}{r}{0.3\textwidth}
+  \vspace{-20pt}
+  \begin{center}
+    \fcolorbox{black}{black}{\includegraphics[width=0.28\textwidth]{img/db/abstractproblems}}
+  \end{center}
+  \vspace{-20pt}
+  % \caption{A gull}
+  % \vspace{-10pt}
+\end{wrapfigure}
+
+That explains those two tables discribing the problems. The first one colled \emph{abstractproblems} contains the technical informations for submission management. The second one, \emph{problems}, is the description of a problem, according to a specific language (\emph{language\_id}) and refering to a \emph{abstractproblems}.
+-nm
+There is different types of problems, distinguishable by their \emph{problem\_nm} patern:
+\begin{itemize}
+	\setlength\itemsep{0em}
+	\item \emph{Pxxxxx}\\
+	Those type of problems will be our baseline for the analysis. In fact, they are the \emph{offical} problems initialy present in the database, created by the designers. We can consider them as \emph{right} and \emph{relevant} in term of submission and verdict\footnote{The concept of verdict will be explain in the following section \emph{submissions table}}.
+
+	\item \emph{Xxxxxx}\\
+	The letter \emph{X} means \emph{externe}. Those problems have been created by users (\emph{instructors}) and havn't been validatd by anyone. Moreover, only a portion of users can acces to it (Those who suscribed to the courses related to the same instructor)
+
+	\item \emph{Gxxxxx}\\
+	The letter \emph{G} means \emph{game}. Those problems are used on a very specific scenario. There is only a very few of them and they will be ignored in our analysis.
+
+	\item \emph{deprecated}\\
+	Obviously, this type of problem is not relevant for the analysis. 
+
+\end{itemize}
+
+\paragraph{Numbers:}%~\\ % (fold)
+\begin{itemize}
+	\setlength\itemsep{0em}
+	\item 1909 abstractproblems in total.
+	\item 1325 Pxxxxx like abstractproblems.
+	\item 575 Xxxxxx like abstractproblems.
+	\item 9 Gxxxxx like abstractproblems.
+	\item 85 deprecated abstractproblems (including 21 Pxxxx type). 
+\end{itemize}
+
+\paragraph{Languages distribution:}~\\ % (fold)
+
+\newpage
+\subsection{submissions} % (fold)
+\label{sub:submissions}
+
+\begin{wrapfigure}{l}{0.58\textwidth}
+  \vspace{-20pt}
+  \begin{center}
+    \fcolorbox{black}{black}{\includegraphics[width=0.54\textwidth]{img/db/submissions}}
+  \end{center}
+  \vspace{-20pt}
+  % \caption{A gull}
+  % \vspace{-10pt}
+\end{wrapfigure}
+
+\paragraph{Description:}~\\ % (fold)
+
+Every instance in this table represents the submission of a solution for a specific problem (\emph{problem\_id}) by a specific user (\emph{user\_id}) at a given time/moment (\emph{time\_in (time\_out)}). From that submission (after a internal process) will stand out a \emph{verdict} meaningful of the submission correctness.
+
+This table is one of the most important for our analysis. Indeed, this on contains the usage history of the Jutge.
+
+\paragraph{Numbers:}%~\\ % (fold)
+\begin{itemize}
+	\setlength\itemsep{0em}
+	\item 1605270 submissions in total.
+	\item 43.62\% of accepted submissions (cf. \emph{Verdict distribution})
+	\item 
+\end{itemize}
+
+
+\paragraph{Verdict distribution :}%~\\% (fold)
+% \begin{center}
+\begin{table}
+\caption[Verdicts distribution]{Frequency distribustion of verdict accros every relevant submissions (Related to figure \ref{fig:veredict_distrib} on page \pageref{fig:veredict_distrib})}
+\label{tab:veredict_distrib}
+\centering
+\begin{tabular}{lcr}
+\toprule
+ Acronym &                Verdict &     \% \\
+\midrule
+      AC &               Accepted &   43.62 \\
+      WA &           Wrong Answer &   30.06 \\
+      EE &        Execution Error &   11.41 \\
+      CE &      Compilation Error &   10.70 \\
+      PE &     Presentation Error &    3.62 \\
+      SC &                 Scored &    0.30 \\
+      IC &      Invalid Character &    0.29 \\
+      SE &           Setter Error &    0.01 \\
+      FE &           Fatal Errors &    0.00 \\
+      NC &  Noncompliant Solution &    0.00 \\
+ Pending &     Pending Submission &    0.00 \\
+      IE &         Internal Error &    0.00 \\
+\bottomrule
+\end{tabular}
+\end{table}
+% \end{center}
+
+As shown on the following table and on the figure \ref{fig:veredict_distrib}, 95\% of the submissions are distributed among those 4 verdict :
+\begin{itemize}
+  \setlength\itemsep{0em}
+  \item Accepted (43.62\%).
+  \item Wrong Answer (30.06\%).
+  \item Execution Error (11.41\%).
+  \item Compilation Error (10.70\%).
+\end{itemize}
+
+So for our first analysis, we will group the non-accepted instances and consider a boolean structure with only accepted or rejected submissions.
+
+\begin{figure}[h!]
+\centering
+\fcolorbox{black}{white}{\includegraphics[width=\textwidth]{img/db/veredict_distrib}}
+% \decoRule
+\caption[Verdicts distribution]{Frequency distribustion of verdict accros every relevant submissions}
+\label{fig:veredict_distrib}
+\end{figure}
+
+% subsubsection verdict_distribution (end)
+
+% \lipsum[2-3]
+
+% subsection submissions (end)
+
+% subsection problems (end)
+
+
+\subsection{Courses organisation} % (fold)
+\label{sub:courses_organisation}
+
+As shown on the figure \ref{fig:courses_orga}, there is several levels under the idea of courses.
+To summarize, a course invloves a list of users subsribed to it. Than a course is devided into sections, and those sections are basically lists of problems.
+
+All of thisi is implemented with 5 tables in the database (All described hereinafter).
+
+\begin{figure}[h!]
+\centering
+\fcolorbox{black}{white}{\includegraphics[width=0.5\textwidth]{img/db/courses_orga}}
+% \decoRule
+\caption[Courses organisation]{Courses organisation - Subscribed users, Lists of problems, problems }
+\label{fig:courses_orga}
+\end{figure}
+
+% subsection courses_organisation (end)
+
+
+% \newpage
+\subsection{courses} % (fold)
+\begin{wrapfigure}{r}{0.38\textwidth}
+  \vspace{-20pt}
+  \begin{center}
+    \fcolorbox{black}{black}{\includegraphics[width=0.36\textwidth]{img/db/courses}}
+  \end{center}
+  \vspace{-20pt}
+  % \caption{A gull}
+  % \vspace{-10pt}
+\end{wrapfigure}
+
+\paragraph{Description}~\\ % (fold)
+General description of a course, linked to creator user and containing , inter alia, its title, description and annotation.
+
+\paragraph{Numbers} % (fold)
+\begin{itemize}
+	\setlength\itemsep{0em}
+	\item 112 courses in total.
+	\item 18 of them are public.
+\end{itemize}
+% \lipsum[2-3]
+
+% paragraph courses (end)
+
+\subsection{coursesusers} % (fold)
+\begin{wrapfigure}{r}{0.27\textwidth}
+  \vspace{-20pt}
+  \begin{center}
+    \fcolorbox{black}{black}{\includegraphics[width=0.26\textwidth]{img/db/coursesusers}}
+  \end{center}
+  \vspace{-20pt}
+  % \caption{A gull}
+  % \vspace{-10pt}
+\end{wrapfigure}
+
+\paragraph{Description}~\\ % (fold)
+Join table for the many-to-many relation between users and courses, matching a \emph{users\_id} with a \emph{course\_id}. It further includes an attribute for users known as tutor for the concerned course.
+
+
+% \lipsum[2-3]
+% \paragraph{coursesusers}~\\ % (fold)
+
+% paragraph coursesusers (end)
+
+\subsection{lists} % (fold)
+\label{sub:lists}
+
+\begin{wrapfigure}{r}{0.38\textwidth}
+  \vspace{-20pt}
+  \begin{center}
+    \fcolorbox{black}{black}{\includegraphics[width=0.36\textwidth]{img/db/lists}}
+  \end{center}
+  \vspace{-20pt}
+  % \caption{A gull}
+  % \vspace{-10pt}
+\end{wrapfigure}
+
+\paragraph{Description}~\\ % (fold)
+General description of a list of problems, linked to creator user and containing , inter alia, its title, description and annotation.
+Conceptually, a list is very closed to a course. The conceptual difference appears in a many-to-many relation between those tables. The idea is to include lists inside courses.
+
+\paragraph{Numbers} % (fold)
+\begin{itemize}
+	\setlength\itemsep{0em}
+	\item 607 lists in total.
+	\item 157 of them are public.
+\end{itemize}
+% \lipsum[2-3]
+
+% paragraph lists (end)
+
+
+\subsection{courseslists} % (fold)
+\begin{wrapfigure}{r}{0.27\textwidth}
+  \vspace{-20pt}
+  \begin{center}
+    \fcolorbox{black}{black}{\includegraphics[width=0.26\textwidth]{img/db/courseslists}}
+  \end{center}
+  \vspace{-20pt}
+  % \caption{A gull}
+  % \vspace{-10pt}
+\end{wrapfigure}
+
+\paragraph{Description}~\\ % (fold)
+Join table for the many-to-many relation between courses and lists of problems, matching a \emph{list\_id} with a \emph{course\_id}. It further includes an attribute indicating the position of that list inside the concerned course. 
+% \lipsum[2-3]
+
+% paragraph courseslists (end)
+
+
+
+\subsection{listitems} % (fold)
+\label{sub:listitems}
+
+\begin{wrapfigure}{r}{0.3\textwidth}
+  \vspace{-20pt}
+  \begin{center}
+    \fcolorbox{black}{black}{\includegraphics[width=0.28\textwidth]{img/db/listitems}}
+  \end{center}
+  \vspace{-20pt}
+  % \caption{A gull}
+  % \vspace{-10pt}
+\end{wrapfigure}
+
+\paragraph{Description}~\\ % (fold)
+Join table for the many-to-many relation between lists and problems, matching a \emph{list\_id} with a \emph{problem\_nm}. It further includes an attribute indicating the position of the problem in that list. 
+% \lipsum[2-3]
+
+% paragraph listitems (end)
+
+
+\subsection{problemstags} % (fold)
+\label{sub:problemstags}
+
+\begin{wrapfigure}{l}{0.28\textwidth}
+  \vspace{-20pt}
+  \begin{center}
+    \fcolorbox{black}{black}{\includegraphics[width=0.26\textwidth]{img/db/problemstags}}
+  \end{center}
+  \vspace{-20pt}
+  % \caption{A gull}
+  % \vspace{-10pt}
+\end{wrapfigure}
+
+\paragraph{Description}~\\ % (fold)
+This is a arbitrary classification of the problems, defined by problems creators or tutors. This information wont be used for the analysis but can be intresting in a further validation process.
+% \lipsum[2-3]
+
+% subsection problemstags (end)
+
+\subsection{compilers} % (fold)
+\label{sub:compilers}
+
+\begin{wrapfigure}{l}{0.3\textwidth}
+  \vspace{-20pt}
+  \begin{center}
+    \fcolorbox{black}{black}{\includegraphics[width=0.28\textwidth]{img/db/compilers}}
+  \end{center}
+  \vspace{-20pt}
+  % \caption{A gull}
+  % \vspace{-10pt}
+\end{wrapfigure}
+\paragraph{Description}~\\ % (fold)
+This table countains the techincal information of compilers inplemented into the Jutge. When you want to submit a solution to a problem, you can chose between differents laguages, or event different version of compilers. 
+
+As shown on  the compiler distribution, this information is not relevant for our analysis because the mostly used language inside the application is \emph{C++} (90\%)! The  information of lagage used for a submission will be ignored in the begining.
+% \lipsum[2-3]
+% subsection compilers (end)
+
+% section database_description (end)

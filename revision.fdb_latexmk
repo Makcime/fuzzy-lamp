@@ -1,0 +1,11 @@
+# Fdb version 3
+["pdflatex"] 1461944836 "revision.tex" "revision.pdf" "revision" 1461944853
+  "/etc/texmf/web2c/texmf.cnf" 1449506198 1101 af7716885e081ab43982cab7b4672c1a ""
+  "/usr/share/texlive/texmf-dist/web2c/texmf.cnf" 1392645748 31083 1dfd8bf685ce0009c40532fedf8a7c53 ""
+  "/usr/share/texmf/web2c/texmf.cnf" 1392645748 31083 1dfd8bf685ce0009c40532fedf8a7c53 ""
+  "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1449506259 3822874 40fc53822d6a69a41f378acb2cd6921b ""
+  "revision.aux" 1461944754 8 a94a2480d3289e625eea47cd1b285758 ""
+  "revision.tex" 1461944412 0 d41d8cd98f00b204e9800998ecf8427e ""
+  (generated)
+  "revision.pdf"
+  "revision.log"
